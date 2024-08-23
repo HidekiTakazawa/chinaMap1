@@ -1,3 +1,6 @@
+#main {
+  display: flex;
+}
 .map
 {
   width: 600px;
@@ -14,5 +17,82 @@
 {
   width: 100%;
 }
+.header {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+  background-color: lemonchiffon;
+  width: 100%;
 
+
+}
+
+.header2 {
+
+  display: flex;
+}
+
+.linkurl {
+  margin-left: auto;
+}
+
+#flash {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+  background-color: skyblue;
+  text-decoration: none;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 6px
+}
+
+
+
+.dataContent {
+  margin-left: 30px;
+  padding-top: 80px;
+  display: block;
+}
+
+.dataNone {
+  display: none;
+}
+
+.clkBtn {
+  cursor: pointer;
+  user-select: none;
+}
+
+.divFlex {
+  display: flex;
+}
+
+.sheetSelect {
+  padding-top: 0px;
+}
+
+.speed {
+  padding-top: 0px;
+}
+
+.classGazou {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  text-decoration: none;
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 0, 0.5),
+      rgba(0, 0, 255, 0.5));
+}
+
+.classSite {
+  display: inline-block;
+  width: 50px;
+  height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+}
 
