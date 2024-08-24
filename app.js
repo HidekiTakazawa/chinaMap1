@@ -19,7 +19,7 @@ const bgColorNothing = '#ffffff';
 const bgColorGazou = '#000000';
 const bgColorSite = '#00000a'
 const bgColorPinyin = '#fffffa';
-
+const kurukuru = document.getElementById('kurukuru');
 //
 const END_POINT = "https://script.google.com/macros/s/AKfycbyG52LsV1qmFiMNAs8xEJxHcFdxN60OectBEdw40EpU9mWSTv1EzWhhU7n1gO5XWdhF/exec";
 //スプレッドシート（タブ）の番号
@@ -88,6 +88,7 @@ function getFromGAS() {
     renderSheetDatas(sheetData);
     mapSet();
     iniCSSSet();
+    kurukuru.remove();
   }).fail((error) => {  // 失敗した時の処理
     alert('Error:' + JSON.stringify(error));
 

@@ -95,4 +95,32 @@
   text-decoration: none;
   cursor: pointer;
 }
+.loading {
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  z-index: 99;
+  content: '';
+  display: block;
+  margin: auto;
+  width: 300px;
+  border: 4px solid #ccc;
+  border-right-color: #0AC;
+  border-radius: 100px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  animation: rotation 0.6s linear infinite;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
