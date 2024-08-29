@@ -1,5 +1,5 @@
-#main {
-  display: flex;
+.main2 {
+  margin-top: 100px;
 }
 .map
 {
@@ -7,6 +7,7 @@
   max-width: 95%;
   height: auto;
   margin-left: 10px;
+  margin-top: 10px;
   /* margin: 16px auto; */
   border: 1px solid #555555;
   box-sizing: border-box;
@@ -52,8 +53,8 @@
 
 
 .dataContent {
-  margin-left: 30px;
-  padding-top: 80px;
+  margin-left: 10px;
+  /* padding-top: 80px; */
   display: block;
 }
 
@@ -121,6 +122,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+@media (min-width: 600px) {
+  .main2 {
+    display: flex;
+    justify-content: space-between;
+  }
+  #container {
+    flex: 1;
+  }
+
+ 
 }
 
 
