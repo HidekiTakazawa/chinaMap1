@@ -6,6 +6,74 @@ const pinyinName = new Array("anhui", "beijing", "chongqing", "fujian", "gansu",
 
 const shengName = new Array("安徽省", "北京市", "重庆市", "福建省", "甘肃省", "广东省", "广西壮族自治区", "贵州省", "海南省", "河北省", "黑龙江省", "河南省", "湖北省", "湖南省", "江苏省", "江西省", "吉林省", "辽宁省", "内蒙古自治区", "宁夏回族自治区", "青海省", "陕西省", "山东省", "上海市", "山西省", "四川省", "天津市", "新疆维吾尔自治区", "西藏自治区", "云南省", "浙江省", "香港", "澳门");
 //
+//
+const locations = [
+  { name: "anhui", lat: 31.8198, lon: 117.2903 },
+  { name: "beijing", lat: 39.9042, lon: 116.4074 },
+  { name: "chongqing", lat: 29.4316, lon: 106.9123 },
+  { name: "fujian", lat: 26.0789, lon: 119.2965 },
+  { name: "gansu", lat: 36.0611, lon: 103.8343 },
+  { name: "guangdong", lat: 23.3790, lon: 113.7633 },
+  { name: "guangxi", lat: 23.8298, lon: 108.7881 },
+  { name: "guizhou", lat: 26.5982, lon: 106.7074 },
+  { name: "hainan", lat: 20.0174, lon: 110.3492 },
+  { name: "hebei", lat: 38.0428, lon: 114.5149 },
+  { name: "heilongjiang", lat: 45.7421, lon: 126.6617 },
+  { name: "henan", lat: 34.7655, lon: 113.7536 },
+  { name: "hubei", lat: 30.5454, lon: 114.3423 },
+  { name: "hunan", lat: 28.1124, lon: 112.9834 },
+  { name: "jiangsu", lat: 32.0617, lon: 118.7632 },
+  { name: "jiangxi", lat: 28.6757, lon: 115.9092 },
+  { name: "jilin", lat: 43.8378, lon: 126.5494 },
+  { name: "liaoning", lat: 41.8057, lon: 123.4315 },
+  { name: "neimenggu", lat: 40.8175, lon: 111.7652 },
+  { name: "ningxia", lat: 38.4922, lon: 106.2309 },
+  { name: "qinghai", lat: 36.6209, lon: 101.7802 },
+  { name: "shannxi", lat: 34.2655, lon: 108.9542 },
+  { name: "shandong", lat: 36.6683, lon: 117.0208 },
+  { name: "shanghai", lat: 31.2304, lon: 121.4737 },
+  { name: "shanxi", lat: 37.8570, lon: 113.5632 },
+  { name: "sichuan", lat: 30.5728, lon: 104.0668 },
+  { name: "tianjin", lat: 39.3434, lon: 117.3616 },
+  { name: "xinjiang", lat: 43.8295, lon: 87.6169 },
+  { name: "xizang", lat: 29.6525, lon: 91.1721 },
+  { name: "yunnan", lat: 25.0453, lon: 102.7097 },
+  { name: "zhejiang", lat: 30.2674, lon: 120.1528 },
+  { name: "xianggang", lat: 22.3193, lon: 114.1694 },
+  { name: "aomen", lat: 22.1987, lon: 113.5439 }
+];
+async function getTemperature(pinyinName) {
+  const location = locations.find(loc => loc.name === pinyinName);
+  if (!location) {
+    throw new Error("Location not found");
+  }
+  const { lat, lon } = location;
+  const apiKey = '9b8dd3d24e3e519a5fd6fd6ebf488ebc'; // ここにAPIキーを入力
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ja`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const temperature = data.main.temp;
+    const description = data.weather[0].description;
+    const observationTime = new Date(data.dt * 1000).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    
+    return [temperature, description, observationTime];
+   
+  } catch (error) {
+    console.error("Error fetching temperature data:", error);
+    throw error;
+  }
+}
+
+// 使用例
+// getTemperature("beijing").then(([temp, description]) => {
+//   console.log(`beijingの温度は${temp}°Cです。天気は${description}です`);
+// }).catch(error => {
+//   console.error(error);
+// });
 
 let main;
 let container;
@@ -18,6 +86,7 @@ let sheetData;
 const bgColorNothing = '#ffffff';
 const bgColorGazou = '#000000';
 const bgColorSite = '#00000a'
+const bgColorWeather = '#00000b'
 const bgColorPinyin = '#fffffa';
 const kurukuru = document.getElementById('kurukuru');
 //
@@ -34,12 +103,12 @@ select.onchange = event => {
   var selIndex = select.selectedIndex;
   sheetIndex = selIndex;
   console.log(select.selectedIndex);
-  
+
   mapBGColorSet(sheetIndex);
-  
+
   sheetChangeSet(sheetIndex);
 
-  
+
 }
 //
 function sheetChangeSet(sheetIndex) {
@@ -109,7 +178,7 @@ function setSheetNames(sheetNamesArray) {
     sheetSelector.appendChild(option);
   });
 }
-function renderSheetDatas(sheetDatas) {
+async function renderSheetDatas(sheetDatas) {
 
   let div, table, tr, td, tbody, atag;
   div = document.createElement('div');
@@ -179,6 +248,15 @@ function renderSheetDatas(sheetDatas) {
 
             td.appendChild(atag);
             break;
+          case bgColorWeather:
+            const [temp, description, observationTime] = await updateTemperature(strName);
+            if (temp !== null && description !== null) {
+              td.textContent = `(観測時間：${observationTime})温度は${temp}°Cです。天気は${description}です`;
+            } else {
+              td.textContent = '温度データを取得できませんでした';
+            }
+           
+            break
           case bgColorPinyin:
 
             td.textContent = strName.substring(0, 1).toUpperCase() + strName.substring(1);
@@ -210,16 +288,29 @@ function renderSheetDatas(sheetDatas) {
 
 }
 
-  //
-
-
-
-
 //
+// 非同期関数の定義
+async function updateTemperature(strName) {
+  try {
+      // getTemperatureの結果を待つ
+      const [temp, description, observationTime] = await getTemperature(strName);
+      console.log(`(観測時間：${observationTime})${strName}の温度は${temp}°Cです。天気は${description}です`);
+      return [temp, description, observationTime];
+  } catch (error) {
+      console.error(error);
+      return [null, null];
+  }
+}
+
+
+
+/// cnvString関数は、入力文字列を分割して名前と背景色を返します
 function cnvString(strContent) {
   let strName;
   let strBgColor;
+  // '高*沢' で文字列を分割し、名前と背景色を取得
   [strName, strBgColor] = strContent.split('高*沢');
+  // 名前と背景色を配列として返す
   return [strName, strBgColor];
 }
 // 
@@ -253,36 +344,36 @@ function iniCSSSet() {
 //
 function mapSet() {
   maps.forEach(async (map, index) => {
-  const res = await fetch(map)
+    const res = await fetch(map)
 
-  if (res.ok) {
-    const svg = await res.text()
-    containers[index].innerHTML = svg
-    const prefs = document.querySelectorAll('.shengName')
-    const taiwan = document.querySelector("#taiwan");
-    taiwan.addEventListener('mouseover', (event) => {
-      event.currentTarget.style.fill = "#00ff00"
-    })
-    taiwan.addEventListener('mouseleave', (event) => {
-      event.currentTarget.style.fill = ""
-    })
-    prefs.forEach((pref) => {
-      // pref.addEventListener('mouseover', (event) => {
-      //   event.currentTarget.style.fill = "#ff0000"
-      // })
-      // pref.addEventListener('mouseleave', (event) => {
-      //   event.currentTarget.style.fill = ""
-      // })
-      // マウスクリック時のイベント
-      pref.addEventListener('click', (event) => {
-        console.log(event.currentTarget.id);
-        mapClickEvent(event.currentTarget.id);
-        
-
+    if (res.ok) {
+      const svg = await res.text()
+      containers[index].innerHTML = svg
+      const prefs = document.querySelectorAll('.shengName')
+      const taiwan = document.querySelector("#taiwan");
+      taiwan.addEventListener('mouseover', (event) => {
+        event.currentTarget.style.fill = "#00ff00"
       })
-    })
-  }
-});
+      taiwan.addEventListener('mouseleave', (event) => {
+        event.currentTarget.style.fill = ""
+      })
+      prefs.forEach((pref) => {
+        // pref.addEventListener('mouseover', (event) => {
+        //   event.currentTarget.style.fill = "#ff0000"
+        // })
+        // pref.addEventListener('mouseleave', (event) => {
+        //   event.currentTarget.style.fill = ""
+        // })
+        // マウスクリック時のイベント
+        pref.addEventListener('click', (event) => {
+          console.log(event.currentTarget.id);
+          mapClickEvent(event.currentTarget.id);
+
+
+        })
+      })
+    }
+  });
 
 }
 //
@@ -328,7 +419,7 @@ function mapBGColorSet(sheetIndex) {
       idName = pinyinName[i];
       break;
     }
-  
+
 
   }
   prefs.forEach((pref) => {
@@ -343,18 +434,18 @@ function mapBGColorSet(sheetIndex) {
 
 //
 function speakData(param1) {
- 
 
- // if (param1 instanceof HTMLTableCellElement) {
- const td = param1;
-  
- var uttr = new SpeechSynthesisUtterance(td.textContent);
- uttr.lang = "zh-CN"
- 
- speechSynthesis.cancel();
- speechSynthesis.speak(uttr);
 
- // }
+  // if (param1 instanceof HTMLTableCellElement) {
+  const td = param1;
+
+  var uttr = new SpeechSynthesisUtterance(td.textContent);
+  uttr.lang = "zh-CN"
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(uttr);
+
+  // }
 
 }
 // テキストを音声に変換して再生する関数
