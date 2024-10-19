@@ -13,23 +13,7 @@
 
 ## 使用方法
 
-1. リポジトリをクローンします。
 
-    ```sh
-    git clone https://github.com/yourusername/china-map-visualization.git
-    ```
-
-2. プロジェクトディレクトリに移動します。
-
-    ```sh
-    cd china-map-visualization
-    ```
-
-3. `index.html` ファイルをブラウザで開きます。
-
-    ```sh
-    open index.html
-    ```
 
 ## 貢献
 
