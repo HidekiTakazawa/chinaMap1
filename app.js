@@ -48,7 +48,7 @@ async function getTemperature(pinyinName) {
     throw new Error("Location not found");
   }
   const { lat, lon } = location;
-  const apiKey = '9b8dd3d24e3e519a5fd6fd6ebf488ebc'; // ここにAPIキーを入力
+  const apiKey = ''; // ここにAPIキーを入力
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ja`;
   try {
     const response = await fetch(url);
