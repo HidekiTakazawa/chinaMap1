@@ -37,7 +37,44 @@
 .linkurl {
   margin-left: auto;
 }
+.logo {
+  display: flex;
+}
+.div-about {
+  margin-top: 10px;
+  margin-left: auto;
+}
+.about-link {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #007BFF;
+}
 
+.about-link:hover {
+  text-decoration: underline;
+}
+.content {
+  margin-top: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #555555;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.back-link {
+  margin-left: 20px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #007BFF;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
 #flash {
   display: inline-block;
   width: 100px;
